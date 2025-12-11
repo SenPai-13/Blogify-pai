@@ -36,7 +36,10 @@ export const createPost = async (req: Request, res: Response) => {
 // Get all posts
 export const getPosts = async (req: Request, res: Response) => {
   try {
-    const posts = await Post.find().populate("author", "username email");
+    const posts = await Post.find()
+      .populate("author", "username email")
+      .populate("comments.user", "username email"); // <-- IMPORTANT
+
     res.json(posts);
   } catch (err) {
     res.status(500).json({ message: "Error fetching posts" });
@@ -46,14 +49,15 @@ export const getPosts = async (req: Request, res: Response) => {
 // Get single post
 export const getPostById = async (req: Request, res: Response) => {
   try {
-    const post = await Post.findById(req.params.id).populate(
-      "author",
-      "username email"
-    );
+    const post = await Post.findById(req.params.id)
+      .populate("author", "username email")
+      .populate("comments.user", "username email");
+
     if (!post) return res.status(404).json({ message: "Post not found" });
+
     res.json(post);
   } catch (err) {
-    res.status(500).json({ message: "Error fetching post" });
+    res.status(500).json({ message: "Error getting post" });
   }
 };
 
@@ -192,14 +196,18 @@ export const addComment = async (req: Request, res: Response) => {
 // Get all comments for a post
 export const getComments = async (req: Request, res: Response) => {
   try {
-    const post = await Post.findById(req.params.id).populate(
+    const postId = req.params.id; // ✅ Correct param name
+
+    const post = await Post.findById(postId).populate(
       "comments.user",
       "username email"
-    ); // ✅ populate user
+    ); // ⭐ Populate usernames
 
-    if (!post) return res.status(404).json({ message: "Post not found" });
+    if (!post) {
+      return res.status(404).json({ message: "Post not found" });
+    }
 
-    res.json(post.comments); // ✅ return populated comments
+    res.json({ comments: post.comments });
   } catch (err) {
     console.error("Error fetching comments:", err);
     res.status(500).json({ message: "Error fetching comments" });

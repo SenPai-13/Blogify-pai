@@ -1,32 +1,39 @@
 import { createSlice, type PayloadAction } from "@reduxjs/toolkit";
 
 export type UserType = {
-  id: string; // MongoDB _id
+  id: string; // matches Redux user id
   username: string;
   email: string;
 };
 
 interface UserState {
   token: string | null;
+  accessToken: string | null;
   user: UserType | null;
   loading: boolean;
   error: string | null;
   checked: boolean;
-  accessToken: string | null;
 }
 
-// 🔹 Rehydrate from localStorage
+// 🔹 Safely parse user from localStorage
+let parsedUser: UserType | null = null;
 const storedUser = localStorage.getItem("user");
-const storedToken = localStorage.getItem("token");
-const storedAccessToken = localStorage.getItem("accessToken");
+if (storedUser) {
+  try {
+    parsedUser = JSON.parse(storedUser);
+  } catch {
+    console.warn("Invalid user in localStorage, clearing...");
+    localStorage.removeItem("user");
+  }
+}
 
 const initialState: UserState = {
-  token: storedToken || null,
-  user: storedUser ? JSON.parse(storedUser) : null,
+  token: localStorage.getItem("token") || null,
+  accessToken: localStorage.getItem("accessToken") || null,
+  user: parsedUser,
   loading: true,
   error: null,
   checked: false,
-  accessToken: storedAccessToken || null,
 };
 
 const userAuthSlice = createSlice({
@@ -47,19 +54,13 @@ const userAuthSlice = createSlice({
     },
     setToken(state, action: PayloadAction<string | null>) {
       state.token = action.payload;
-      if (action.payload) {
-        localStorage.setItem("token", action.payload);
-      } else {
-        localStorage.removeItem("token");
-      }
+      if (action.payload) localStorage.setItem("token", action.payload);
+      else localStorage.removeItem("token");
     },
     setAccessToken(state, action: PayloadAction<string | null>) {
       state.accessToken = action.payload;
-      if (action.payload) {
-        localStorage.setItem("accessToken", action.payload);
-      } else {
-        localStorage.removeItem("accessToken");
-      }
+      if (action.payload) localStorage.setItem("accessToken", action.payload);
+      else localStorage.removeItem("accessToken");
     },
     setLoading(state, action: PayloadAction<boolean>) {
       state.loading = action.payload;
@@ -76,7 +77,6 @@ const userAuthSlice = createSlice({
       state.error = null;
       state.checked = true;
 
-      // 🔹 Clear localStorage
       localStorage.removeItem("user");
       localStorage.removeItem("token");
       localStorage.removeItem("accessToken");

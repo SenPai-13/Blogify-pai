@@ -72,7 +72,9 @@ const AuthPage: React.FC = () => {
         toast.success(res.data.message || "Logged in successfully!");
         dispatch(setUser(res.data.user));
         dispatch(setAccessToken(res.data.token));
-        setLocalStorage("accessToken", res.data.token); // ✅ persist token
+
+        setLocalStorage("user", res.data.user); // ✅ save user
+        setLocalStorage("accessToken", res.data.token); // save token
         navigate("/dashboard");
       } catch (err: any) {
         const msg = err.response?.data?.message || "Login failed";
@@ -133,7 +135,9 @@ const AuthPage: React.FC = () => {
       toast.success(res.data.message || "Signup successful!");
       dispatch(setUser(res.data.user));
       dispatch(setAccessToken(res.data.token));
-      setLocalStorage("accessToken", res.data.token); // ✅ persist token
+
+      setLocalStorage("user", res.data.user); // ✅ persist user
+      setLocalStorage("accessToken", res.data.token);
       navigate("/dashboard");
 
       // Reset local state

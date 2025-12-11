@@ -4,10 +4,14 @@ import { useSelector } from "react-redux";
 import type { RootState } from "../../../store/store";
 import { FaTrash } from "react-icons/fa";
 
-interface Comment {
+export interface CommentType {
   _id: string;
+  user: {
+    _id: string; // backend ID
+    username: string;
+    email: string;
+  };
   text: string;
-  user: { _id: string; username: string; email: string };
   createdAt: string;
   updatedAt: string;
 }
@@ -16,7 +20,7 @@ const Comments: React.FC<{ postId: string }> = ({ postId }) => {
   const token = useSelector((state: RootState) => state.userAuth.accessToken);
   const user = useSelector((state: RootState) => state.userAuth.user);
 
-  const [comments, setComments] = useState<Comment[]>([]);
+  const [comments, setComments] = useState<CommentType[]>([]);
   const [text, setText] = useState("");
 
   const loadComments = async () => {
@@ -24,7 +28,6 @@ const Comments: React.FC<{ postId: string }> = ({ postId }) => {
       const res = await axios.get(`/api/posts/${postId}/comments`, {
         headers: { Authorization: `Bearer ${token}` },
       });
-      // ✅ backend must populate comments.user
       setComments(res.data.comments || res.data);
     } catch (err) {
       console.error("Error loading comments:", err);
@@ -33,6 +36,8 @@ const Comments: React.FC<{ postId: string }> = ({ postId }) => {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+    if (!text.trim()) return;
+
     try {
       const res = await axios.post(
         `/api/posts/${postId}/comments`,
@@ -61,41 +66,64 @@ const Comments: React.FC<{ postId: string }> = ({ postId }) => {
     loadComments();
   }, [postId]);
 
+  // Simple "time ago" formatter
+  const formatTimeAgo = (dateStr: string) => {
+    const diff = Math.floor((Date.now() - new Date(dateStr).getTime()) / 1000);
+    if (diff < 60) return `${diff}s ago`;
+    if (diff < 3600) return `${Math.floor(diff / 60)}m ago`;
+    if (diff < 86400) return `${Math.floor(diff / 3600)}h ago`;
+    return `${Math.floor(diff / 86400)}d ago`;
+  };
+
   return (
-    <div className="mt-4">
+    <div className="mt-6">
       {/* Comment input */}
-      <form onSubmit={handleSubmit} className="flex gap-2 mb-4">
+      <form onSubmit={handleSubmit} className="flex gap-3 mb-6">
         <input
           type="text"
           value={text}
           onChange={(e) => setText(e.target.value)}
           placeholder="Write a comment..."
-          className="flex-1 border rounded px-3 py-2"
+          className="flex-1 border border-gray-300 rounded-full px-4 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
           required
         />
         <button
           type="submit"
-          className="bg-blue-600 text-white px-4 py-2 rounded">
+          className="bg-blue-600 text-white px-6 py-2 rounded-full hover:bg-blue-700 transition">
           Post
         </button>
       </form>
 
       {/* Comments list */}
-      <ul className="space-y-2">
+      <ul className="space-y-4">
         {comments.map((c) => (
-          <li key={c._id} className="flex justify-between items-center">
-            <div>
-              <span className="font-semibold">{c.user?.username}</span>:{" "}
-              {c.text}
-              <span className="text-xs text-gray-500 ml-2">
-                {new Date(c.createdAt).toLocaleString()}
-              </span>
+          <li
+            key={c._id}
+            className="flex items-start gap-3 p-4 bg-white rounded-lg shadow-sm hover:shadow-md transition relative">
+            {/* Avatar */}
+            <div className="w-10 h-10 rounded-full bg-gray-200 flex items-center justify-center text-gray-600 font-semibold text-sm">
+              {c.user.username[0]?.toUpperCase() || "U"}
             </div>
+
+            {/* Comment content */}
+            <div className="flex-1">
+              <div className="flex items-center justify-between">
+                <span className="font-semibold text-gray-800">
+                  {c.user.username}
+                </span>
+                <span className="text-xs text-gray-400">
+                  {formatTimeAgo(c.createdAt)}
+                </span>
+              </div>
+              <p className="text-gray-700 mt-1">{c.text}</p>
+            </div>
+
+            {/* Delete button */}
             {user?.id === c.user._id && (
               <button
                 onClick={() => handleDelete(c._id)}
-                className="text-red-500 hover:text-red-700">
-                <FaTrash size={14} />
+                className="absolute top-2 right-2 text-red-500 hover:text-red-700 opacity-0 hover:opacity-100 transition">
+                <FaTrash size={16} />
               </button>
             )}
           </li>
