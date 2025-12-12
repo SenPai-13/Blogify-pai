@@ -63,7 +63,7 @@ const AuthPage: React.FC = () => {
     } else {
       // Login flow
       try {
-        const res = await api.post("/auth/login", { email, password });
+        const res = await api.post("/api/auth/login", { email, password });
 
         toast.success(res.data.message || "Logged in successfully!");
         dispatch(setUser(res.data.user));
@@ -81,7 +81,7 @@ const AuthPage: React.FC = () => {
 
   const sendOtp = async () => {
     try {
-      const res = await api.post("/auth/send-otp", {
+      const res = await api.post("/api/auth/send-otp", {
         email,
         username,
         password,
@@ -118,7 +118,7 @@ const AuthPage: React.FC = () => {
   const handleOtpVerify = async (e: React.FormEvent) => {
     e.preventDefault();
     try {
-      const res = await api.post("/auth/verify-otp", {
+      const res = await api.post("/api/auth/verify-otp", {
         email,
         otp,
         password,
