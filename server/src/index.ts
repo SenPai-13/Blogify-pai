@@ -27,10 +27,14 @@ connectDB();
 // Middlewares
 app.use(
   cors({
-    origin: ["https://blogify-pai.vercel.app"],
-    credentials: true,
+    origin: [
+      "http://localhost:5173", // ✅ dev (Vite default port)
+      "https://blogify-pai.vercel.app", // ✅ your Vercel frontend domain
+    ],
+    credentials: true, // ✅ allow cookies/authorization headers
   })
 );
+
 
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
