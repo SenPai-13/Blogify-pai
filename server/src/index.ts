@@ -27,7 +27,7 @@ connectDB();
 // Middlewares
 app.use(
   cors({
-    origin: ["https://blogify-j1sahap7z-arjun-pais-projects.vercel.app"],
+    origin: ["https://blogify-pai.vercel.app"],
     credentials: true,
   })
 );
