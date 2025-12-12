@@ -1,10 +1,10 @@
 import React, { useState, useEffect } from "react";
 import { useNavigate, useLocation } from "react-router-dom";
 import toast, { Toaster } from "react-hot-toast";
-import axios from "axios";
 import { useDispatch } from "react-redux";
 import { setUser, setAccessToken } from "../store/features/userSlice";
-import { setLocalStorage } from "../utils/helpers/localStorage"; // ✅ import helper
+import { setLocalStorage } from "../utils/helpers/localStorage";
+import api from "../lib/axios"; // ✅ centralized axios instance
 
 const AuthPage: React.FC = () => {
   const dispatch = useDispatch();
@@ -37,7 +37,6 @@ const AuthPage: React.FC = () => {
   useEffect(() => {
     if (location.state?.loggedOut) {
       toast.success("Logged out successfully!");
-      // Clear state so it doesn’t re-toast on refresh
       navigate(location.pathname, { replace: true, state: {} });
     }
   }, []);
@@ -64,17 +63,14 @@ const AuthPage: React.FC = () => {
     } else {
       // Login flow
       try {
-        const res = await axios.post("http://localhost:3000/api/auth/login", {
-          email,
-          password,
-        });
+        const res = await api.post("/auth/login", { email, password });
 
         toast.success(res.data.message || "Logged in successfully!");
         dispatch(setUser(res.data.user));
         dispatch(setAccessToken(res.data.token));
 
-        setLocalStorage("user", res.data.user); // ✅ save user
-        setLocalStorage("accessToken", res.data.token); // save token
+        setLocalStorage("user", res.data.user);
+        setLocalStorage("accessToken", res.data.token);
         navigate("/dashboard");
       } catch (err: any) {
         const msg = err.response?.data?.message || "Login failed";
@@ -85,7 +81,7 @@ const AuthPage: React.FC = () => {
 
   const sendOtp = async () => {
     try {
-      const res = await axios.post("http://localhost:3000/api/auth/send-otp", {
+      const res = await api.post("/auth/send-otp", {
         email,
         username,
         password,
@@ -122,21 +118,18 @@ const AuthPage: React.FC = () => {
   const handleOtpVerify = async (e: React.FormEvent) => {
     e.preventDefault();
     try {
-      const res = await axios.post(
-        "http://localhost:3000/api/auth/verify-otp",
-        {
-          email,
-          otp,
-          password,
-          username,
-        }
-      );
+      const res = await api.post("/auth/verify-otp", {
+        email,
+        otp,
+        password,
+        username,
+      });
 
       toast.success(res.data.message || "Signup successful!");
       dispatch(setUser(res.data.user));
       dispatch(setAccessToken(res.data.token));
 
-      setLocalStorage("user", res.data.user); // ✅ persist user
+      setLocalStorage("user", res.data.user);
       setLocalStorage("accessToken", res.data.token);
       navigate("/dashboard");
 
