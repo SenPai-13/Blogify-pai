@@ -27,7 +27,7 @@ connectDB();
 // Middlewares
 app.use(
   cors({
-    origin: [getEnvVariable("FRONT_END_URL")],
+    origin: ["https://blogify-pai.vercel.app/"],
     credentials: true,
   })
 );
