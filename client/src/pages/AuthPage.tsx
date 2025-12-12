@@ -65,7 +65,10 @@ const AuthPage: React.FC = () => {
       try {
         const res = await api.post("/api/auth/login", { email, password });
 
-        toast.success(res.data.message || "Logged in successfully!");
+        toast.success("Login successful", {
+          duration: 2000, // closes in 2 seconds
+        });
+
         dispatch(setUser(res.data.user));
         dispatch(setAccessToken(res.data.token));
 
@@ -90,17 +93,23 @@ const AuthPage: React.FC = () => {
       const msg = res.data?.message;
 
       if (msg === "OTP sent to email") {
-        toast.success("OTP sent to your email!");
+        toast.success("OTP sent to your email!", {
+          duration: 2000, // closes in 2 seconds
+        });
         setTimer(60);
         return true;
       }
       if (msg === "OTP resent to email") {
-        toast.success("OTP resent to your email!");
+        toast.success("OTP resent to your email!", {
+          duration: 2000, // closes in 2 seconds
+        });
         setTimer(60);
         return true;
       }
 
-      toast.success(msg || "OTP sent successfully");
+      toast.success(msg || "OTP sent successfully", {
+        duration: 2000, // closes in 2 seconds
+      });
       return true;
     } catch (err: any) {
       const msg = err.response?.data?.message || "Failed to send OTP";
@@ -125,7 +134,9 @@ const AuthPage: React.FC = () => {
         username,
       });
 
-      toast.success(res.data.message || "Signup successful!");
+      toast.success(res.data.message || "Signup successful!", {
+        duration: 2000, // closes in 2 seconds
+      });
       dispatch(setUser(res.data.user));
       dispatch(setAccessToken(res.data.token));
 
