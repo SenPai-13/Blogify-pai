@@ -27,14 +27,20 @@ connectDB();
 // Middlewares
 app.use(
   cors({
-    origin: [
-      "http://localhost:5173", // ✅ dev (Vite default port)
-      "https://blogify-pai.vercel.app", // ✅ your Vercel frontend domain
-    ],
-    credentials: true, // ✅ allow cookies/authorization headers
+    origin: (origin, callback) => {
+      const allowedOrigins = [
+        "http://localhost:5173",
+        process.env.FRONT_END_URL, // ✅ use env var
+      ];
+      if (!origin || allowedOrigins.includes(origin)) {
+        callback(null, true);
+      } else {
+        callback(new Error("Not allowed by CORS"));
+      }
+    },
+    credentials: true,
   })
 );
-
 
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
