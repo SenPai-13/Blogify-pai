@@ -27,15 +27,13 @@ export const signup = async (req: Request, res: Response) => {
         .json({ message: "User already registered. Please log in." });
     }
 
-    // ✅ Hash password before saving
     const hashedPassword = await bcrypt.hash(password, 10);
-    // "10" is the salt rounds, same as your old users ($2b$10$...)
 
     const newUser = new User({
       email,
       username,
       phone,
-      password: hashedPassword, // store hashed password
+      password: hashedPassword,
       emailVerified: true,
     });
 

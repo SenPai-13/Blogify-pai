@@ -72,7 +72,7 @@ const FeedCard: React.FC<FeedCardProps> = ({
 
     try {
       const res = await api.post(
-        `/api/posts/${post._id}/comments`, // ✅ plural
+        `/api/posts/${post._id}/comments`,
         { text: commentText },
         { headers: { Authorization: `Bearer ${token}` } }
       );
@@ -88,7 +88,7 @@ const FeedCard: React.FC<FeedCardProps> = ({
     if (!token) return;
     try {
       await api.delete(
-        `/api/posts/${post._id}/comments/${commentId}`, // ✅ plural
+        `/api/posts/${post._id}/comments/${commentId}`,
         { headers: { Authorization: `Bearer ${token}` } }
       );
       setComments((prev) => prev.filter((c) => c._id !== commentId));

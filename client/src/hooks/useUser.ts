@@ -27,7 +27,7 @@ export const useUser = () => {
         if (accessToken) {
           dispatch(setAccessToken(accessToken));
 
-          // ✅ attach token to request
+          // attach token to request
           const res = await api.get("/api/auth/me", {
             headers: {
               Authorization: `Bearer ${accessToken}`,

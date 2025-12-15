@@ -36,13 +36,13 @@ router.delete("/:id", protect, deletePost);
 // Like/unlike a post
 router.post("/:id/like", protect, toggleLike);
 
-// 🔹 Add a comment (plural)
+//  Add a comment (plural)
 router.post("/:id/comments", protect, addComment);
 
-// 🔹 Get all comments for a post (plural)
+// Get all comments for a post (plural)
 router.get("/:id/comments", getComments);
 
-// 🔹 Delete a comment (plural)
+// Delete a comment (plural)
 router.delete("/:id/comments/:commentId", protect, deleteComment);
 
 export default router;

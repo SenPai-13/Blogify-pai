@@ -48,7 +48,6 @@ const Dashboard: React.FC = () => {
             </button>
           </div>
 
-          {/* Content area fills remaining space */}
           <div className="flex-1 p-6 overflow-y-60 bg-[#1E1E1E] border border-black rounded-4xl">
             {activeTab === "feed" && (
               <div key="feed" className="w-full h-full">

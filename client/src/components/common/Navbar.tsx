@@ -19,10 +19,8 @@ const Navbar: React.FC = () => {
 
   return (
     <nav className="bg-black px-6 py-4 flex items-center justify-between">
-      {/* Logo on the left */}
       <img src={logo} alt="Blogify Logo" className="h-10 w-auto" />
 
-      {/* Logout icon on the right (only if signed in) */}
       {user && (
         <button
           type="button"

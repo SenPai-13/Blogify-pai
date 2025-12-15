@@ -32,7 +32,7 @@ const CreatePostForm: React.FC<CreatePostFormProps> = ({ onPostCreated }) => {
       await createPost({ heading, content: markdown }, token);
       console.log("Post created successfully");
 
-      // ✅ refresh feed
+      // refresh feed
       onPostCreated?.();
 
       setHeading("");

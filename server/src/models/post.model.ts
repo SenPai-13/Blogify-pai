@@ -20,7 +20,7 @@ export interface IPost extends Document {
   liked?: boolean;
 }
 
-// 🔹 Comment Schema
+// Comment Schema
 const commentSchema = new Schema<IComment>(
   {
     user: { type: Schema.Types.ObjectId, ref: "User", required: true },
@@ -37,7 +37,7 @@ commentSchema.pre("save", function (next) {
   next();
 });
 
-// 🔹 Post Schema
+// Post Schema
 const postSchema = new Schema<IPost>(
   {
     heading: { type: String, required: true, trim: true },

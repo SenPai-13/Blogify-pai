@@ -22,7 +22,7 @@ export const createPost = async (req: Request, res: Response) => {
     const post = new Post({
       heading,
       content,
-      author: req.user.id, // ✅ matches schema
+      author: req.user.id,
     });
 
     await post.save();
@@ -38,7 +38,7 @@ export const getPosts = async (req: Request, res: Response) => {
   try {
     const posts = await Post.find()
       .populate("author", "username email")
-      .populate("comments.user", "username email"); // <-- IMPORTANT
+      .populate("comments.user", "username email");
 
     res.json(posts);
   } catch (err) {
@@ -144,7 +144,6 @@ export const toggleLike = async (req: Request, res: Response) => {
 
     await post.save();
 
-    // 🔹 Return consistent shape (full post + derived fields)
     res.json({
       _id: post._id,
       heading: post.heading,
@@ -196,12 +195,12 @@ export const addComment = async (req: Request, res: Response) => {
 // Get all comments for a post
 export const getComments = async (req: Request, res: Response) => {
   try {
-    const postId = req.params.id; // ✅ Correct param name
+    const postId = req.params.id;
 
     const post = await Post.findById(postId).populate(
       "comments.user",
       "username email"
-    ); // ⭐ Populate usernames
+    );
 
     if (!post) {
       return res.status(404).json({ message: "Post not found" });

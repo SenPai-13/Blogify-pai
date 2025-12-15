@@ -7,25 +7,20 @@ import cookieParser from "cookie-parser";
 import authRoutes from "./routes/authRoutes";
 import postRoutes from "./routes/postRoutes";
 
-// ✅ Load environment variables from .env at project root
 dotenv.config();
 console.log("Loaded MONGODB_URI:", process.env.MONGODB_URI);
 
 const app = express();
 const PORT = process.env.PORT || 3000;
 
-// ✅ Environment variable validation
 ["JWT_SECRET", "MONGODB_URI", "FRONT_END_URL"].forEach((key) => {
   if (!process.env[key]) {
     throw new Error(`${key} is not defined in environment variables`);
   }
 });
 
-// Connect Database
 connectDB();
 
-// Middlewares
-// CORS
 app.use(
   cors({
     origin: process.env.FRONT_END_URL,
@@ -34,7 +29,6 @@ app.use(
     credentials: true,
   })
 );
-
 
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
@@ -51,7 +45,7 @@ app.use("/api/auth", authRoutes);
 // Posts
 app.use("/api/posts", postRoutes);
 
-// ✅ Centralized error handling middleware
+// Centralized error handling middleware
 app.use(
   (
     err: any,
@@ -66,7 +60,6 @@ app.use(
   }
 );
 
-// Start server
 app.listen(PORT, () => {
   console.log(`Server running on port ${PORT}`);
 });

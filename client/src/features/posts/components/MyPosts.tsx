@@ -15,14 +15,14 @@ const MyPosts: React.FC = () => {
     try {
       const data: Post[] = await fetchMyPosts(token);
 
-      // 🔹 Normalize backend response (guarantee likesCount & liked)
+      // Normalize backend response (guarantee likesCount & liked)
       const normalized = data.map((p) => ({
         ...p,
         likesCount: p.likesCount ?? p.likes?.length ?? 0,
         liked: p.liked ?? false,
       }));
 
-      // 🔹 Sort once (newest first)
+      // Sort once (newest first)
       const sorted = normalized.sort(
         (a, b) =>
           new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime()
@@ -32,7 +32,7 @@ const MyPosts: React.FC = () => {
     } catch (err) {
       console.error("Error fetching my posts:", err);
     } finally {
-      setInitialLoading(false); // only once
+      setInitialLoading(false);
     }
   };
 

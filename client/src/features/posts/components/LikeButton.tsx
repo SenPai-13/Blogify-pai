@@ -23,7 +23,6 @@ const LikeButton: React.FC<LikeButtonProps> = ({
     try {
       const data = await toggleLike(post._id, token);
 
-      // ✅ Trust backend response only
       setIsLiked(data.liked);
       setLikesCount(data.likesCount);
 
