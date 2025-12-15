@@ -158,7 +158,7 @@ const AuthPage: React.FC = () => {
 
   return (
     <>
-      {/* <Toaster position="top-center" /> */}
+      <Toaster position="top-center" />
       <div className="flex items-center justify-center min-h-screen bg-black">
         <div className="bg-white rounded-lg shadow-lg p-8 w-full max-w-md">
           <h2 className="text-2xl font-bold text-center mb-6 text-gray-800">
