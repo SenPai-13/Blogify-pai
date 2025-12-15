@@ -61,7 +61,7 @@ const AuthPage: React.FC = () => {
         setLocalStorage("accessToken", res.data.token);
 
         setTimeout(() => {
-          navigate("/");
+          window.location.reload();
         }, 2000);
       } catch (err: any) {
         const msg = err.response?.data?.message || "Signup failed";
