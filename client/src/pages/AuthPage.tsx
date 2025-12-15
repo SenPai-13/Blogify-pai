@@ -4,7 +4,7 @@ import toast, { Toaster } from "react-hot-toast";
 import { useDispatch } from "react-redux";
 import { setUser, setAccessToken } from "../store/features/userSlice";
 import { setLocalStorage } from "../utils/helpers/localStorage";
-import api from "../lib/axios"; // ✅ centralized axios instance
+import api from "../lib/axios";
 
 const AuthPage: React.FC = () => {
   const dispatch = useDispatch();
@@ -23,7 +23,7 @@ const AuthPage: React.FC = () => {
 
   useEffect(() => {
     if (location.state?.loggedOut) {
-      toast.success("Logged out successfully!");
+      toast.success("Logged out successfully!", { duration: 2000 });
       navigate(location.pathname, { replace: true, state: {} });
     }
   }, []);
@@ -63,7 +63,7 @@ const AuthPage: React.FC = () => {
         navigate("/dashboard");
       } catch (err: any) {
         const msg = err.response?.data?.message || "Signup failed";
-        toast.error(msg);
+        toast.error(msg, { id: "auth-error" });
       }
     } else {
       // Login flow
@@ -81,7 +81,7 @@ const AuthPage: React.FC = () => {
         navigate("/dashboard");
       } catch (err: any) {
         const msg = err.response?.data?.message || "Login failed";
-        toast.error(msg);
+        toast.error(msg, { id: "auth-error" });
       }
     }
   };
