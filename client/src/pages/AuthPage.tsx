@@ -60,7 +60,9 @@ const AuthPage: React.FC = () => {
         setLocalStorage("user", res.data.user);
         setLocalStorage("accessToken", res.data.token);
 
-        navigate("/dashboard");
+        setTimeout(() => {
+          navigate("/dashboard");
+        }, 2000);
       } catch (err: any) {
         const msg = err.response?.data?.message || "Signup failed";
         toast.error(msg, { id: "auth-error" });
@@ -78,7 +80,9 @@ const AuthPage: React.FC = () => {
         setLocalStorage("user", res.data.user);
         setLocalStorage("accessToken", res.data.token);
 
-        navigate("/dashboard");
+        setTimeout(() => {
+          navigate("/dashboard");
+        }, 2000);
       } catch (err: any) {
         const msg = err.response?.data?.message || "Login failed";
         toast.error(msg, { id: "auth-error" });
